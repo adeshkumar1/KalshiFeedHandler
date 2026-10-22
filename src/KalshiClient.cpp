@@ -10,6 +10,8 @@
 #include <chrono>
 #include <cstdint>
 #include <iostream>
+
+#include "OrderBook.h"
 /*
 connect should:
 1. load private key
@@ -169,6 +171,47 @@ void KalshiClient::connect() {
 
         json incoming = json::parse(text);
         std::cout << incoming.dump(2) << '\n';
+
+        string msg_type = incoming["type"];
+
+        if (msg_type == "orderbook_snapshot") {
+            {
+                const auto& levels = incoming["msg"]["yes_dollars_fp"];
+                for (const auto& level : levels) {
+                    string price_str = level[0];
+                    string quantity_str = level[1];
+
+                    double price = stod(price_str);
+                    int64_t quantity = stoll(quantity_str);
+
+                    order_book.update({price, quantity}, Side::BID);
+                }
+            }
+            {
+                const auto& levels = incoming["msg"]["no_dollars_fp"];
+                for (const auto& level : levels) {
+                    string price_str = level[0];
+                    string quantity_str = level[1];
+
+                    double price = stod(price_str);
+                    int64_t quantity = static_cast<int64_t>(stod(quantity_str));
+
+                    order_book.update({price, quantity}, Side::ASK);
+                }
+            }
+        } else if (msg_type == "orderbook_delta") {
+            auto& msg = incoming["msg"];
+
+            Side side = (incoming["msg"]["side"] == "yes") ? Side::BID : Side::ASK;
+
+            string price_str = msg["price_dollars"];
+            string quantity_str = msg["delta_fp"];
+
+            double price = stod(price_str);
+            int64_t quantity = static_cast<int64_t>(stod(quantity_str));
+
+            order_book.update({price, quantity}, side);
+        }
     }
 
     return;

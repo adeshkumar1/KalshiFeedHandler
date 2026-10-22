@@ -12,6 +12,7 @@ void OrderBook::snapshot(const Snapshot& snapshot) {
 
 void OrderBook::update(const Position& position, Side side) {
     array<int64_t, 100> book = (side == Side::BID) ? bids : asks;
-    book[position.price] += position.quantity;
-}
+    int price_level = position.price * 100 - 1;
 
+    book[price_level] += position.quantity;
+}
