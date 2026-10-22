@@ -12,9 +12,11 @@ enum class Side {
 
 struct OrderBook {
     // indexed by cents
-    array<int64_t, 100> bids;
-    array<int64_t, 100> asks;
+    array<int64_t, 100> bids {};
+    array<int64_t, 100> asks {};
 
-    OrderBook(const Snapshot& snapshot);
+    OrderBook();
+
+    void snapshot(const Snapshot& snapshot);
     void update(const Position& position, Side side);
 };

@@ -1,6 +1,6 @@
 #include <Orderbook.h>
 
-OrderBook::OrderBook(const Snapshot& snapshot) {
+void OrderBook::snapshot(const Snapshot& snapshot) {
     for (const Position& position : snapshot.bids) {
         bids[position.price] += position.quantity;
     }
