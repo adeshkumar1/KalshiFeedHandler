@@ -1,5 +1,6 @@
 #include <KalshiClient.h>
 
+#include <cstdlib>
 #include <iostream>
 
 int main(int argc, char** argv) {
@@ -16,7 +17,7 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    string kalshi_api_key (raw_ptr);
+    string kalshi_api_key(raw_ptr);
 
     string private_key_path = argv[1];
     string market_ticker = argv[2];
