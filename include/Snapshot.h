@@ -5,7 +5,7 @@
 using namespace std;
 
 struct Position {
-    int64_t price; // in cents
+    int price; // in cents
     int64_t quantity;
 };
 
